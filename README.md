@@ -2,6 +2,8 @@
 
 A fluentd plugin to suppress emission of subsequent logs identical to the first one.
 
+[![Build Status](https://travis-ci.org/edvakf/fluent-plugin-dedup.svg?branch=master)](https://travis-ci.org/edvakf/fluent-plugin-dedup)
+
 ## Example Usage
 
 It's useful when the output of a command executed by `in_exec` only returns the "latest" state of something and you want to send logs only when there is a change.
@@ -28,6 +30,11 @@ It's useful when the output of a command executed by `in_exec` only returns the 
 All logs that are processed by this plugin will have tag prefix `dedup`.
 
 If the optional `file` parameter is set, it dumps the state during shutdown and loads on start, so that it can still dedup after reload.
+
+## Testing
+
+    bundle install
+    bundle exec rake test
 
 ## Installation
 
