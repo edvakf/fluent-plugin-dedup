@@ -18,8 +18,6 @@ class Fluent::DedupOutput < Fluent::Output
     unless conf.include?('key')
       raise Fluent::ConfigError, "config parameter `key` is required"
     end
-    @key = conf['key']
-    @file = conf['file']
     @states = {}
   end
 
