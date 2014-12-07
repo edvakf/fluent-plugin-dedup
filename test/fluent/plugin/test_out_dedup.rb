@@ -89,4 +89,25 @@ class DedupOutputTest < Test::Unit::TestCase
       assert_equal 0, d2.emits.length
     end
   end
+
+  sub_test_case '`cache_per_tag` parameter is present' do
+    test "a record identical to most recent N records is suppressed" do
+      config = %[
+        key           unique_id
+        cache_per_tag 2
+      ]
+
+      d = create_driver(config)
+      d.run do
+        d.emit({'unique_id' => '1'}, Time.now)
+        d.emit({'unique_id' => '1'}, Time.now) # dup
+        d.emit({'unique_id' => '2'}, Time.now)
+        d.emit({'unique_id' => '1'}, Time.now) # dup
+      end
+
+      assert_equal 2, d.emits.length
+      assert_equal '1', d.emits[0][2]['unique_id']
+      assert_equal '2', d.emits[1][2]['unique_id']
+    end
+  end
 end
