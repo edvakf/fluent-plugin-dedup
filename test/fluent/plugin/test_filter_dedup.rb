@@ -37,9 +37,8 @@ class DedupFilterTest < Test::Unit::TestCase
   test "different tags are not treated as identical" do
     d = create_driver(CONFIG)
     d.run do
-      d.emit({'unique_id' => '1'})
-      d.tag = d.tag + d.tag # set a different tag from the first
-      d.emit({'unique_id' => '1'}) # not dup
+      d.emit_with_tag('test1', {'unique_id' => '1'})
+      d.emit_with_tag('test2', {'unique_id' => '1'}) # not dup
     end
 
     assert_equal 2, d.emits.length
