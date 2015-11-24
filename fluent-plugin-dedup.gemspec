@@ -1,7 +1,7 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-dedup"
-  spec.version       = "0.2.0"
+  spec.version       = "0.3.0"
   spec.authors       = ["edvakf"]
   spec.email         = ["taka.atsushi@gmail.com"]
   spec.summary       = %q{fluentd plugin for removing duplicate logs}
