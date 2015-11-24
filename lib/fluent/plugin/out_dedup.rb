@@ -7,6 +7,7 @@ class Fluent::DedupOutput < Fluent::Output
   config_param :key, :string, :default => nil
   config_param :file, :string, :default => nil
   config_param :cache_per_tag, :size, :default => 1
+  config_param :cache_ttl, :integer, :default => 0
 
   # Define `log` method for v0.10.42 or earlier
   unless method_defined?(:log)
@@ -82,6 +83,10 @@ class Fluent::DedupOutput < Fluent::Output
   end
 
   def new_lru
-    LruRedux::ThreadSafeCache.new(@cache_per_tag)
+    if 0 < @cache_ttl
+      LruRedux::TTL::ThreadSafeCache.new(@cache_per_tag, @cache_ttl)
+    else
+      LruRedux::ThreadSafeCache.new(@cache_per_tag)
+    end
   end
 end
