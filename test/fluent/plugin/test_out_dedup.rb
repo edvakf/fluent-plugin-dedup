@@ -113,6 +113,14 @@ class DedupOutputTest < Test::Unit::TestCase
   end
 
   sub_test_case '`cache_ttl` parameter is present' do
+    setup do
+      Timecop.freeze(Time.now)
+    end
+
+    teardown do
+      Timecop.return
+    end
+
     test "a record identical to most recent N records is suppressed with TTL option" do
       config = %[
         key           unique_id
@@ -124,16 +132,17 @@ class DedupOutputTest < Test::Unit::TestCase
       d.run do
         d.emit({'unique_id' => '1'}, Time.now)
         d.emit({'unique_id' => '1'}, Time.now) # dup
-        d.emit({'unique_id' => '2'}, Time.now)
+        Timecop.freeze(Time.now + 59)
         d.emit({'unique_id' => '1'}, Time.now) # dup
-        Timecop.freeze(Time.now + 61)
-        d.emit({'unique_id' => '1'}, Time.now) # no dup since expired
+        Timecop.freeze(Time.now + 1) # expires cache
+        d.emit({'unique_id' => '1'}, Time.now)
+        Timecop.freeze(Time.now + 1)
+        d.emit({'unique_id' => '1'}, Time.now) # dup
       end
 
-      assert_equal 3, d.emits.length
+      assert_equal 2, d.emits.length
       assert_equal '1', d.emits[0][2]['unique_id']
-      assert_equal '2', d.emits[1][2]['unique_id']
-      assert_equal '1', d.emits[2][2]['unique_id']
+      assert_equal '1', d.emits[1][2]['unique_id']
     end
   end
 end
