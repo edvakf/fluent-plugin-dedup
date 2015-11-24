@@ -22,6 +22,7 @@ It's useful when the output of a command executed by `in_exec` only returns the 
       key  unique_id # required
       file /tmp/dedup_state.json # optional. If set, saves the state to the file.
       cache_per_tag 10 # optional. If set, recent logs up to this number is cached.
+      cache_ttl 600 # optional. If set, cache entries is expired in this TTL.
     </match>
 
     <match dedup.some.thing>
@@ -33,6 +34,8 @@ All logs that are processed by this plugin will have tag prefix `dedup`.
 If the optional `file` parameter is set, it dumps the state during shutdown and loads on start, so that it can still dedup after reload.
 
 If the optional `cache_per_tag` is set, it caches N recently appeared logs (only caches `unique_id` in this example) and compared to new logs.
+
+If the optional `cache_ttl` is set, it evicts cache entries in a specific amount of time.
 
 ## Testing
 
