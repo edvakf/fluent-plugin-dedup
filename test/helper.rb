@@ -4,3 +4,4 @@ require 'fluent/load'
 require 'fluent/test'
 
 require 'fluent/plugin/out_dedup'
+require 'fluent/plugin/filter_dedup'
