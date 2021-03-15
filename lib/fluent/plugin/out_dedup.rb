@@ -37,7 +37,7 @@ class Fluent::DedupOutput < Fluent::Output
   def emit(tag, es, chain)
     es.each do |time, record|
       next if dup?(tag, record)
-      Fluent::Engine.emit("dedup.#{tag}", time, record)
+      router.emit("dedup.#{tag}", time, record)
     end
 
     chain.next
